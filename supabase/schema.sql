@@ -45,3 +45,38 @@ create table if not exists savings (
 -- Helpful index for the running safe-to-spend calculation
 create index if not exists idx_transactions_user_created
   on transactions (user_id, created_at desc);
+-- ============================================
+-- MONEY MANAGEMENT
+-- ============================================
+
+create table if not exists financial_profile (
+  id uuid primary key default gen_random_uuid(),
+
+  user_id text not null unique default 'demo_user',
+
+  monthly_income numeric not null default 0,
+  current_balance numeric not null default 0,
+  monthly_savings_target numeric not null default 0,
+  emergency_buffer numeric not null default 0,
+
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+create table if not exists upcoming_expenses(
+  id uuid primary key default gen_random_uuid(),
+
+  user_id text not null default 'demo_user',
+  title text not null,
+  amount numeric not null,
+  category text,
+
+  due_date date not null,
+
+  is_paid boolean not null default false,
+
+  created_at timestamptz not null default now()
+  );
+create index if not exists idx_upcoming_expenses_user_due
+  on upcoming_expenses (user_id, due_date);
+
+
