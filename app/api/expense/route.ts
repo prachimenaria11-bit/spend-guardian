@@ -42,11 +42,59 @@ export async function GET() {
     );
   }
 
+  // Get the user's financial plan
+  const { data: financialProfile } = await supabase
+    .from("financial_profile")
+    .select(
+      "current_balance, monthly_savings_target, emergency_buffer"
+    )
+    .eq("user_id", DEMO_USER)
+    .maybeSingle();
+
+  // Get unpaid upcoming expenses
+  const { data: upcomingExpenses } = await supabase
+    .from("upcoming_expenses")
+    .select("amount")
+    .eq("user_id", DEMO_USER)
+    .eq("is_paid", false);
+
+  const currentBalance = financialProfile
+    ? Number(financialProfile.current_balance)
+    : 0;
+
+  const savingsTarget = financialProfile
+    ? Number(financialProfile.monthly_savings_target)
+    : 0;
+
+  const emergencyBuffer = financialProfile
+    ? Number(financialProfile.emergency_buffer)
+    : 0;
+
+  const upcomingExpensesTotal = (
+    upcomingExpenses ?? []
+  ).reduce(
+    (sum, expense) => sum + Number(expense.amount),
+    0
+  );
+
+  const safeToSpend = financialProfile
+    ? Math.max(
+        currentBalance -
+          upcomingExpensesTotal -
+          savingsTarget -
+          emergencyBuffer,
+        0
+      )
+    : null;
+
   return NextResponse.json({
     transactions: data,
+    safeToSpend,
+    upcomingExpensesTotal,
+    savingsTarget,
+    emergencyBuffer,
   });
 }
-
 export async function POST(req: NextRequest) {
   const body = await req.json();
 

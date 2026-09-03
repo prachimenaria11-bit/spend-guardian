@@ -53,13 +53,18 @@ export default function Home() {
       setSafeToSpend(Number(data.budget.total_budget));
     }
   }
+async function loadTransactions() {
+  const res = await fetch("/api/expense");
+  const data = await res.json();
 
-  async function loadTransactions() {
-    const res = await fetch("/api/expense");
-    const data = await res.json();
+  setTransactions(data.transactions ?? []);
 
-    setTransactions(data.transactions ?? []);
+  if (data.safeToSpend !== null && data.safeToSpend !== undefined) {
+    setSafeToSpend(data.safeToSpend);
   }
+}
+
+ 
 
   useEffect(() => {
     loadBudget();
