@@ -77,6 +77,7 @@ export async function GET() {
     0
   );
 
+  // Calculate Safe-to-Spend
   const safeToSpend = financialProfile
     ? Math.max(
         currentBalance -
@@ -87,14 +88,37 @@ export async function GET() {
       )
     : null;
 
+  // Calculate remaining days in the current month
+  const today = new Date();
+
+  const daysInMonth = new Date(
+    today.getFullYear(),
+    today.getMonth() + 1,
+    0
+  ).getDate();
+
+  const daysRemaining = Math.max(
+    daysInMonth - today.getDate() + 1,
+    1
+  );
+
+  // Calculate Daily Safe-to-Spend
+  const dailySafeToSpend =
+    safeToSpend !== null
+      ? safeToSpend / daysRemaining
+      : null;
+
   return NextResponse.json({
     transactions: data,
     safeToSpend,
+    dailySafeToSpend,
+    daysRemaining,
     upcomingExpensesTotal,
     savingsTarget,
     emergencyBuffer,
   });
 }
+
 export async function POST(req: NextRequest) {
   const body = await req.json();
 

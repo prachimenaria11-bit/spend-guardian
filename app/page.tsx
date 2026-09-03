@@ -30,6 +30,7 @@ export default function Home() {
   const [budgetInput, setBudgetInput] = useState("");
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [safeToSpend, setSafeToSpend] = useState<number | null>(null);
+  const [dailySafeToSpend, setDailySafeToSpend] = useState<number | null>(null);
 
   const [merchant, setMerchant] = useState("");
   const [amount, setAmount] = useState("");
@@ -62,8 +63,14 @@ async function loadTransactions() {
   if (data.safeToSpend !== null && data.safeToSpend !== undefined) {
     setSafeToSpend(data.safeToSpend);
   }
-}
 
+  if (
+    data.dailySafeToSpend !== null &&
+    data.dailySafeToSpend !== undefined
+  ) {
+    setDailySafeToSpend(data.dailySafeToSpend);
+  }
+}
  
 
   useEffect(() => {
@@ -219,11 +226,34 @@ async function loadTransactions() {
           {/* Spend Ring */}
 
           <div className="card">
-            <SpendRing
-              safeToSpend={safeToSpend}
-              totalBudget={Number(budget.total_budget)}
-            />
-          </div>
+  <SpendRing
+    safeToSpend={safeToSpend}
+    totalBudget={Number(budget.total_budget)}
+  />
+
+  {dailySafeToSpend !== null && (
+    <div
+      style={{
+        marginTop: 20,
+        textAlign: "center",
+      }}
+    >
+      <strong>
+        ₹{dailySafeToSpend.toFixed(0)} / day
+      </strong>
+
+      <p
+        style={{
+          color: "var(--text-dim)",
+          marginTop: 6,
+          fontSize: 14,
+        }}
+      >
+        Your suggested daily spending limit
+      </p>
+    </div>
+  )}
+</div>
 
           {/* Log Payment */}
 
