@@ -176,6 +176,15 @@ export default function Home() {
 
     <UpcomingExpenses />
 
+     {/* ============================================
+         UPCOMING EXPENSES
+          ============================================ */}
+
+      <UpcomingExpenses />
+
+
+     
+
       {/* ============================================
           EXISTING SPEND GUARDIAN FEATURES
           ============================================ */}
