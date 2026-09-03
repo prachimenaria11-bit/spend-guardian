@@ -176,11 +176,7 @@ export default function Home() {
 
     <UpcomingExpenses />
 
-     {/* ============================================
-         UPCOMING EXPENSES
-          ============================================ */}
-
-      <UpcomingExpenses />
+     
 
 
      
