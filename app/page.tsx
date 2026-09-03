@@ -168,7 +168,16 @@ export default function Home() {
           MONEY MANAGEMENT
           ============================================ */}
 
+      <MoneyManagement />
+
+     {/* ============================================
+         UPCOMING EXPENSES
+          ============================================ */}
+
       <UpcomingExpenses />
+
+
+     
 
       {/* ============================================
           EXISTING SPEND GUARDIAN FEATURES
