@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import SpendRing from "./components/SpendRing";
 import MoneyManagement from "./components/MoneyManagement";
+import UpcomingExpenses from "./components/UpcomingExpenses";
 
 type Budget = {
   id: string;
@@ -167,7 +168,7 @@ export default function Home() {
           MONEY MANAGEMENT
           ============================================ */}
 
-      <MoneyManagement />
+      <UpcomingExpenses />
 
       {/* ============================================
           EXISTING SPEND GUARDIAN FEATURES
