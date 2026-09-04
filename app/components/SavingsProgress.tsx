@@ -144,7 +144,8 @@ export default function SavingsProgress() {
           style={{
             width: `${data.progress}%`,
             height: "100%",
-            background: "var(--accent)",
+            background: "linear-gradient(90deg, var(--success), var(--cyan))",
+           
             borderRadius: 10,
             transition: "width 0.5s ease",
           }}

@@ -184,17 +184,13 @@ async function loadTransactions() {
           ============================================ */}
 
       <MoneyManagement />
+<div className="dashboard-grid">
+  <SavingsProgress />
+  <UpcomingExpenses />
+</div>
 
-      <SavingsProgress />
-      
-      {/* ============================================
-          UPCOMING EXPENSES
-          ============================================ */}
-
-    <UpcomingExpenses />
-
-    <FinancialRecommendation />
-    <AffordabilityChecker />
+<FinancialRecommendation />
+<AffordabilityChecker />
 
      
 
@@ -233,7 +229,7 @@ async function loadTransactions() {
         <>
           {/* Spend Ring */}
 
-          <div className="card">
+          <div className="card safe-spend-card">
   <SpendRing
     safeToSpend={safeToSpend}
     totalBudget={Number(budget.total_budget)}

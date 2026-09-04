@@ -1,21 +1,33 @@
 :root {
-  --bg: #0f1b1a;
-  --surface: #16302b;
-  --surface-raised: #1c3a33;
-  --border: #2a4841;
-  --text: #f3f1ea;
-  --text-dim: #a9bdb6;
-  --gold: #d4a64a;
-  --gold-soft: rgba(212, 166, 74, 0.15);
-  --coral: #e2725b;
-  --coral-soft: rgba(226, 114, 91, 0.15);
-  --sage: #7fa88f;
+  --bg: #080b18;
+  --surface: #11172a;
+  --surface-raised: #171f38;
+  --border: #293452;
+
+  --text: #f8fafc;
+  --text-dim: #94a3b8;
+
+  --primary: #8b5cf6;
+  --primary-soft: rgba(139, 92, 246, 0.15);
+
+  --blue: #3b82f6;
+  --blue-soft: rgba(59, 130, 246, 0.15);
+
+  --cyan: #22d3ee;
+
+  --success: #34d399;
+  --success-soft: rgba(52, 211, 153, 0.15);
+
+  --warning: #f59e0b;
+  --warning-soft: rgba(245, 158, 11, 0.15);
+
+  --danger: #f87171;
+  --danger-soft: rgba(248, 113, 113, 0.15);
 
   --font-display: "Fraunces", serif;
   --font-body: "Inter", sans-serif;
   --font-mono: "JetBrains Mono", monospace;
 }
-
 * {
   box-sizing: border-box;
 }
@@ -44,7 +56,7 @@ button {
 }
 
 .container {
-  max-width: 760px;
+  max-width: 900px;
   margin: 0 auto;
   padding: 48px 24px 96px;
 }
@@ -61,9 +73,9 @@ button {
 .title {
   font-family: var(--font-display);
   font-weight: 500;
-  font-size: 32px;
+  font-size: 38px;
   line-height: 1.15;
-  margin: 0 0 4px;
+  margin: 0 0 6px;
 }
 
 .subtitle {
@@ -73,11 +85,24 @@ button {
 }
 
 .card {
-  background: var(--surface);
+  background: linear-gradient(
+    145deg,
+    rgba(17, 23, 42, 0.98),
+    rgba(13, 18, 34, 0.98)
+  );
   border: 1px solid var(--border);
-  border-radius: 16px;
-  padding: 24px;
-  margin-bottom: 20px;
+  border-radius: 18px;
+  padding: 26px;
+  margin-bottom: 22px;
+  box-shadow: 0 12px 35px rgba(0, 0, 0, 0.22);
+  transition: transform 0.2s ease, border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(139, 92, 246, 0.45);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.28);
 }
 
 .card h2 {
@@ -100,13 +125,24 @@ button {
 }
 
 .field input {
-  background: var(--bg);
+  width: 100%;
+  background: rgba(8, 11, 24, 0.8);
   border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 10px 12px;
+  border-radius: 11px;
+  padding: 12px 14px;
   color: var(--text);
   font-family: var(--font-mono);
   font-size: 15px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.field input:hover {
+  border-color: rgba(139, 92, 246, 0.5);
+}
+
+.field input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px var(--primary-soft);
 }
 
 .field input:focus-visible {
@@ -115,25 +151,32 @@ button {
 }
 
 .btn {
-  background: var(--gold);
-  color: #16302b;
+  background: linear-gradient(135deg, var(--blue), var(--primary));
+  color: #ffffff;
   border: none;
   border-radius: 10px;
-  padding: 11px 18px;
-  font-weight: 600;
+  padding: 12px 20px;
+  font-weight: 700;
   font-size: 14px;
+  box-shadow: 0 6px 20px rgba(59, 130, 246, 0.18);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 28px rgba(139, 92, 246, 0.28);
 }
 
 .btn:focus-visible {
-  outline: 2px solid var(--text);
+  outline: 2px solid var(--cyan);
   outline-offset: 2px;
 }
 
 .btn:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+  transform: none;
 }
-
 .btn-ghost {
   background: transparent;
   border: 1px solid var(--border);
@@ -253,8 +296,114 @@ button {
   text-align: center;
   padding: 24px 0;
 }
+/* --- AI Financial Guidance --- */
+
 .recommendation-card {
+  position: relative;
+  overflow: hidden;
   margin-top: 24px;
+  border: 1px solid rgba(139, 92, 246, 0.5);
+  background:
+    radial-gradient(
+      circle at 85% 15%,
+      rgba(139, 92, 246, 0.16),
+      transparent 35%
+    ),
+    radial-gradient(
+      circle at 10% 90%,
+      rgba(34, 211, 238, 0.08),
+      transparent 30%
+    ),
+    linear-gradient(
+      145deg,
+      rgba(20, 24, 48, 0.98),
+      rgba(12, 16, 32, 0.98)
+    );
+  box-shadow:
+    0 16px 45px rgba(0, 0, 0, 0.28),
+    0 0 45px rgba(139, 92, 246, 0.08);
+}
+
+.recommendation-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+.recommendation-label {
+  margin: 0 0 8px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--primary);
+}
+
+.recommendation-header h2 {
+  margin: 0;
+  font-size: 21px;
+}
+
+.recommendation-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+  border-radius: 14px;
+  background: var(--primary-soft);
+  border: 1px solid rgba(139, 92, 246, 0.3);
+  font-size: 25px;
+  box-shadow: 0 0 25px rgba(139, 92, 246, 0.12);
+}
+
+.recommendation-message {
+  margin: 22px 0;
+  padding: 18px 20px;
+  border-left: 3px solid var(--primary);
+  border-radius: 0 12px 12px 0;
+  background: rgba(139, 92, 246, 0.07);
+  color: var(--text);
+  line-height: 1.7;
+  font-size: 15px;
+}
+
+.recommendation-error {
+  margin: 20px 0;
+  padding: 14px 16px;
+  border-radius: 10px;
+  background: var(--danger-soft);
+  color: var(--danger);
+}
+
+.recommendation-refresh {
+  border: 1px solid rgba(139, 92, 246, 0.35);
+  border-radius: 10px;
+  padding: 10px 17px;
+  background: var(--primary-soft);
+  color: #c4b5fd;
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.recommendation-refresh:hover {
+  background: rgba(139, 92, 246, 0.24);
+  border-color: rgba(139, 92, 246, 0.65);
+  transform: translateY(-1px);
+}
+
+.recommendation-refresh:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
 }
 
 .recommendation-header {
@@ -301,35 +450,80 @@ button {
   opacity: 0.6;
   cursor: not-allowed;
 }
+/* --- Smart Purchase Check --- */
+
 .affordability-card {
+  position: relative;
+  overflow: hidden;
   margin-top: 24px;
+  border: 1px solid rgba(59, 130, 246, 0.45);
+  background:
+    radial-gradient(
+      circle at 85% 15%,
+      rgba(59, 130, 246, 0.14),
+      transparent 35%
+    ),
+    radial-gradient(
+      circle at 10% 90%,
+      rgba(34, 211, 238, 0.07),
+      transparent 30%
+    ),
+    linear-gradient(
+      145deg,
+      rgba(17, 23, 42, 0.98),
+      rgba(12, 16, 32, 0.98)
+    );
+  box-shadow:
+    0 16px 45px rgba(0, 0, 0, 0.28),
+    0 0 40px rgba(59, 130, 246, 0.07);
+}
+
+.affordability-card:hover {
+  transform: none;
+  border-color: rgba(59, 130, 246, 0.65);
+  box-shadow:
+    0 20px 55px rgba(0, 0, 0, 0.35),
+    0 0 50px rgba(59, 130, 246, 0.1);
 }
 
 .affordability-header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  gap: 16px;
+  gap: 20px;
 }
 
 .affordability-label {
-  margin: 0 0 6px;
-  font-size: 12px;
+  margin: 0 0 8px;
+  font-family: var(--font-mono);
+  font-size: 11px;
   font-weight: 700;
-  letter-spacing: 0.08em;
-  opacity: 0.65;
+  letter-spacing: 0.12em;
+  color: var(--cyan);
 }
 
 .affordability-header h2 {
   margin: 0;
+  font-size: 21px;
 }
 
 .affordability-icon {
-  font-size: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+  border-radius: 14px;
+  background: var(--blue-soft);
+  border: 1px solid rgba(59, 130, 246, 0.3);
+  font-size: 25px;
+  box-shadow: 0 0 25px rgba(59, 130, 246, 0.1);
 }
 
 .affordability-description {
-  margin: 16px 0 20px;
+  margin: 18px 0 24px;
+  color: var(--text-dim);
   line-height: 1.6;
 }
 
@@ -346,34 +540,69 @@ button {
 .affordability-form input {
   width: 100%;
   box-sizing: border-box;
-  padding: 11px 12px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
+  padding: 12px 14px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: rgba(8, 11, 24, 0.7);
+  color: var(--text);
+  font-family: var(--font-body);
   font-size: 14px;
+  outline: none;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.affordability-form input:focus {
+  border-color: var(--blue);
+  box-shadow: 0 0 0 3px var(--blue-soft);
 }
 
 .affordability-button {
   margin-top: 8px;
   padding: 11px 16px;
   border: none;
-  border-radius: 8px;
+  border-radius: 10px;
   cursor: pointer;
-  font-weight: 600;
+  font-family: var(--font-body);
+  font-weight: 700;
+  color: white;
+  background: linear-gradient(
+    135deg,
+    var(--blue),
+    var(--primary)
+  );
+  box-shadow: 0 8px 20px rgba(59, 130, 246, 0.18);
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.affordability-button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 25px rgba(59, 130, 246, 0.28);
 }
 
 .affordability-button:disabled {
   opacity: 0.6;
   cursor: not-allowed;
+  transform: none;
 }
 
 .affordability-error {
   margin-top: 16px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: var(--danger-soft);
+  color: var(--danger);
 }
 
 .affordability-result {
-  margin-top: 20px;
-  padding: 16px;
-  border-radius: 10px;
+  margin-top: 24px;
+  padding: 18px;
+  border-radius: 12px;
+  background: rgba(59, 130, 246, 0.07);
+  border: 1px solid rgba(59, 130, 246, 0.2);
 }
 
 .affordability-result-title {
@@ -397,31 +626,125 @@ button {
   display: flex;
   flex-direction: column;
   gap: 4px;
+  padding: 12px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.04);
 }
 
 .affordability-numbers span {
   font-size: 12px;
-  opacity: 0.7;
+  color: var(--text-dim);
 }
 
 .affordability-numbers strong {
+  font-family: var(--font-mono);
   font-size: 16px;
 }
 
 .affordability-result.safe {
-  border: 1px solid #4caf50;
+  border-color: rgba(52, 211, 153, 0.35);
+  background: var(--success-soft);
 }
 
 .affordability-result.caution {
-  border: 1px solid #f0ad00;
+  border-color: rgba(245, 158, 11, 0.35);
+  background: var(--warning-soft);
 }
 
 .affordability-result.not_recommended {
-  border: 1px solid #e05252;
+  border-color: rgba(248, 113, 113, 0.35);
+  background: var(--danger-soft);
 }
 
 @media (max-width: 600px) {
   .affordability-numbers {
     grid-template-columns: 1fr;
+  }
+
+  .affordability-header {
+    gap: 12px;
+  }
+}
+/* --- Safe-to-Spend hero card --- */
+
+.safe-spend-card {
+  position: relative;
+  overflow: hidden;
+  padding: 34px 24px;
+  border-color: rgba(139, 92, 246, 0.45);
+  background:
+    radial-gradient(
+      circle at 50% 35%,
+      rgba(139, 92, 246, 0.14),
+      transparent 55%
+    ),
+    linear-gradient(
+      145deg,
+      rgba(17, 23, 42, 0.98),
+      rgba(13, 18, 34, 0.98)
+    );
+  box-shadow:
+    0 18px 50px rgba(0, 0, 0, 0.3),
+    0 0 40px rgba(139, 92, 246, 0.08);
+}
+
+.safe-spend-card:hover {
+  transform: none;
+  border-color: rgba(139, 92, 246, 0.65);
+  box-shadow:
+    0 20px 55px rgba(0, 0, 0, 0.35),
+    0 0 50px rgba(139, 92, 246, 0.12);
+}
+
+.safe-spend-card .ring-wrap {
+  padding-top: 4px;
+  padding-bottom: 8px;
+}
+
+.safe-spend-card .ring-number {
+  font-size: 48px;
+}
+
+.safe-spend-card .ring-label {
+  color: var(--cyan);
+  font-weight: 600;
+}
+
+.safe-spend-card strong {
+  font-family: var(--font-mono);
+  font-size: 18px;
+  color: var(--success);
+}
+/* --- Dashboard two-column sections --- */
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 22px;
+  align-items: start;
+}
+
+.dashboard-grid .card {
+  margin-bottom: 0;
+ 
+}
+
+.dashboard-grid .card h2 {
+  font-size: 20px;
+}
+
+.dashboard-grid .btn {
+  width: 100%;
+}
+
+/* --- Mobile layout --- */
+
+@media (max-width: 700px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .dashboard-grid .card {
+    margin-bottom: 0;
   }
 }
