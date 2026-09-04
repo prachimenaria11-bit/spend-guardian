@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import SpendRing from "./components/SpendRing";
 import MoneyManagement from "./components/MoneyManagement";
 import UpcomingExpenses from "./components/UpcomingExpenses";
+import SavingsProgress from "./components/SavingsProgress";
 
 type Budget = {
   id: string;
@@ -181,6 +182,8 @@ async function loadTransactions() {
           ============================================ */}
 
       <MoneyManagement />
+
+      <SavingsProgress />
       
       {/* ============================================
           UPCOMING EXPENSES
