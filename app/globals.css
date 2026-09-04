@@ -301,3 +301,127 @@ button {
   opacity: 0.6;
   cursor: not-allowed;
 }
+.affordability-card {
+  margin-top: 24px;
+}
+
+.affordability-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.affordability-label {
+  margin: 0 0 6px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  opacity: 0.65;
+}
+
+.affordability-header h2 {
+  margin: 0;
+}
+
+.affordability-icon {
+  font-size: 30px;
+}
+
+.affordability-description {
+  margin: 16px 0 20px;
+  line-height: 1.6;
+}
+
+.affordability-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.affordability-form label {
+  font-weight: 600;
+}
+
+.affordability-form input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 11px 12px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 14px;
+}
+
+.affordability-button {
+  margin-top: 8px;
+  padding: 11px 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.affordability-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.affordability-error {
+  margin-top: 16px;
+}
+
+.affordability-result {
+  margin-top: 20px;
+  padding: 16px;
+  border-radius: 10px;
+}
+
+.affordability-result-title {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.affordability-result p {
+  line-height: 1.5;
+}
+
+.affordability-numbers {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.affordability-numbers div {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.affordability-numbers span {
+  font-size: 12px;
+  opacity: 0.7;
+}
+
+.affordability-numbers strong {
+  font-size: 16px;
+}
+
+.affordability-result.safe {
+  border: 1px solid #4caf50;
+}
+
+.affordability-result.caution {
+  border: 1px solid #f0ad00;
+}
+
+.affordability-result.not_recommended {
+  border: 1px solid #e05252;
+}
+
+@media (max-width: 600px) {
+  .affordability-numbers {
+    grid-template-columns: 1fr;
+  }
+}
