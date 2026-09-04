@@ -1,10 +1,10 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY as string);
+const genAI = new GoogleGenerativeAI(
+  process.env.GEMINI_API_KEY as string
+);
 
-// Gemini 2.5 Flash is on Google's free tier (no credit card required) as of
-// this writing. If you later want higher quality reasoning and have billing
-// enabled, you can swap this to "gemini-2.5-pro".
+// Gemini model
 const MODEL = "gemini-2.5-flash";
 
 function getModel() {
@@ -22,17 +22,52 @@ export type SanitizedTransaction = {
 };
 
 const CATEGORY_KEYWORDS: Record<string, string[]> = {
-  food: ["swiggy", "zomato", "restaurant", "cafe", "food", "dominos", "pizza"],
-  travel: ["uber", "ola", "irctc", "flight", "indigo", "rapido", "metro"],
-  shopping: ["amazon", "flipkart", "myntra", "shop", "mall"],
-  bills: ["electricity", "recharge", "airtel", "jio", "broadband", "rent"],
+  food: [
+    "swiggy",
+    "zomato",
+    "restaurant",
+    "cafe",
+    "food",
+    "dominos",
+    "pizza",
+  ],
+  travel: [
+    "uber",
+    "ola",
+    "irctc",
+    "flight",
+    "indigo",
+    "rapido",
+    "metro",
+  ],
+  shopping: [
+    "amazon",
+    "flipkart",
+    "myntra",
+    "shop",
+    "mall",
+  ],
+  bills: [
+    "electricity",
+    "recharge",
+    "airtel",
+    "jio",
+    "broadband",
+    "rent",
+  ],
 };
 
 function guessCategory(merchant: string): string {
   const m = merchant.toLowerCase();
-  for (const [category, keywords] of Object.entries(CATEGORY_KEYWORDS)) {
-    if (keywords.some((k) => m.includes(k))) return category;
+
+  for (const [category, keywords] of Object.entries(
+    CATEGORY_KEYWORDS
+  )) {
+    if (keywords.some((k) => m.includes(k))) {
+      return category;
+    }
   }
+
   return "other";
 }
 
@@ -41,15 +76,30 @@ export function sanitizeForAI(
   amount: number
 ): SanitizedTransaction {
   return {
-    amountBucket: amount < 200 ? "small" : amount < 1000 ? "medium" : "large",
+    amountBucket:
+      amount < 200
+        ? "small"
+        : amount < 1000
+          ? "medium"
+          : "large",
+
     amount,
+
     categoryHint: guessCategory(merchant),
-    dayOfWeek: new Date().toLocaleDateString("en-US", { weekday: "long" }),
+
+    dayOfWeek: new Date().toLocaleDateString(
+      "en-US",
+      {
+        weekday: "long",
+      }
+    ),
   };
 }
 
 function stripCodeFences(text: string): string {
-  return text.replace(/```json|```/g, "").trim();
+  return text
+    .replace(/```json|```/g, "")
+    .trim();
 }
 
 /* -------------------------------------------------------------------------
@@ -57,24 +107,52 @@ function stripCodeFences(text: string): string {
  * ---------------------------------------------------------------------- */
 export async function categorizeTransaction(
   sanitized: SanitizedTransaction
-): Promise<{ category: string; fallbackUsed: boolean }> {
+): Promise<{
+  category: string;
+  fallbackUsed: boolean;
+}> {
   try {
     const model = getModel();
+
     const result = await model.generateContent(
       `Classify this transaction into exactly one category: food, travel, shopping, bills, or other.
 Data: ${JSON.stringify(sanitized)}
 Respond with ONLY the category word, nothing else.`
     );
-    const text = result.response.text().trim().toLowerCase();
 
-    const valid = ["food", "travel", "shopping", "bills", "other"];
+    const text = result.response
+      .text()
+      .trim()
+      .toLowerCase();
+
+    const valid = [
+      "food",
+      "travel",
+      "shopping",
+      "bills",
+      "other",
+    ];
+
     if (valid.includes(text)) {
-      return { category: text, fallbackUsed: false };
+      return {
+        category: text,
+        fallbackUsed: false,
+      };
     }
-    throw new Error("Unexpected model output: " + text);
+
+    throw new Error(
+      "Unexpected model output: " + text
+    );
   } catch (err) {
-    console.error("categorizeTransaction fallback triggered:", err);
-    return { category: sanitized.categoryHint, fallbackUsed: true };
+    console.error(
+      "categorizeTransaction fallback triggered:",
+      err
+    );
+
+    return {
+      category: sanitized.categoryHint,
+      fallbackUsed: true,
+    };
   }
 }
 
@@ -95,15 +173,26 @@ export async function evaluateSpend(params: {
   daysInMonth: number;
   sanitized: SanitizedTransaction;
 }): Promise<FlagResult> {
-  const { totalBudget, spentSoFar, daysElapsed, daysInMonth, sanitized } =
-    params;
+  const {
+    totalBudget,
+    spentSoFar,
+    daysElapsed,
+    daysInMonth,
+    sanitized,
+  } = params;
 
-  const expectedPace = (totalBudget / daysInMonth) * daysElapsed;
-  const overPaceBy = spentSoFar - expectedPace;
-  const ruleFlagged = overPaceBy > totalBudget * 0.05;
+  const expectedPace =
+    (totalBudget / daysInMonth) * daysElapsed;
+
+  const overPaceBy =
+    spentSoFar - expectedPace;
+
+  const ruleFlagged =
+    overPaceBy > totalBudget * 0.05;
 
   try {
     const model = getModel();
+
     const result = await model.generateContent(
       `You are a budget-pacing assistant. Decide if the user should be gently warned about this transaction.
 
@@ -117,23 +206,36 @@ Respond ONLY with valid JSON, no markdown, in this exact shape:
 {"flagged": boolean, "severity": "none"|"low"|"medium"|"high", "reason": "one short encouraging or cautionary sentence, max 20 words"}`
     );
 
-    const text = stripCodeFences(result.response.text());
+    const text = stripCodeFences(
+      result.response.text()
+    );
+
     const parsed = JSON.parse(text);
 
     return {
       flagged: Boolean(parsed.flagged),
-      severity: parsed.severity ?? "none",
+      severity:
+        parsed.severity ?? "none",
       reason: parsed.reason ?? "",
       fallbackUsed: false,
     };
   } catch (err) {
-    console.error("evaluateSpend fallback triggered:", err);
+    console.error(
+      "evaluateSpend fallback triggered:",
+      err
+    );
+
     return {
       flagged: ruleFlagged,
-      severity: ruleFlagged ? "medium" : "none",
+
+      severity: ruleFlagged
+        ? "medium"
+        : "none",
+
       reason: ruleFlagged
         ? "You're spending faster than your usual pace this month."
         : "You're on track with your budget pace.",
+
       fallbackUsed: true,
     };
   }
@@ -146,12 +248,22 @@ export async function generateMonthSummary(params: {
   totalBudget: number;
   totalSpent: number;
   categoryBreakdown: Record<string, number>;
-}): Promise<{ summary: string; fallbackUsed: boolean }> {
-  const { totalBudget, totalSpent, categoryBreakdown } = params;
-  const saved = totalBudget - totalSpent;
+}): Promise<{
+  summary: string;
+  fallbackUsed: boolean;
+}> {
+  const {
+    totalBudget,
+    totalSpent,
+    categoryBreakdown,
+  } = params;
+
+  const saved =
+    totalBudget - totalSpent;
 
   try {
     const model = getModel();
+
     const result = await model.generateContent(
       `Write a short (max 3 sentences), warm, honest month-end spending recap for a user.
 Total budget: ${totalBudget}
@@ -160,24 +272,189 @@ Saved: ${saved}
 Category breakdown: ${JSON.stringify(categoryBreakdown)}
 Be specific and encouraging, mention one concrete category insight. Plain text only, no markdown.`
     );
-    const text = result.response.text().trim();
-    return { summary: text, fallbackUsed: false };
+
+    const text = result.response
+      .text()
+      .trim();
+
+    return {
+      summary: text,
+      fallbackUsed: false,
+    };
   } catch (err) {
-    console.error("generateMonthSummary fallback triggered:", err);
-    const topCategory = Object.entries(categoryBreakdown).sort(
-      (a, b) => b[1] - a[1]
-    )[0];
+    console.error(
+      "generateMonthSummary fallback triggered:",
+      err
+    );
+
+    const topCategory =
+      Object.entries(categoryBreakdown).sort(
+        (a, b) => b[1] - a[1]
+      )[0];
+
     return {
       summary:
         saved >= 0
-          ? `You saved ₹${saved.toFixed(0)} this month out of a ₹${totalBudget} budget. Your biggest category was ${
+          ? `You saved ₹${saved.toFixed(
+              0
+            )} this month out of a ₹${totalBudget} budget. Your biggest category was ${
               topCategory?.[0] ?? "other"
             }.`
-          : `You went ₹${Math.abs(saved).toFixed(
+          : `You went ₹${Math.abs(
+              saved
+            ).toFixed(
               0
             )} over budget this month. Your biggest category was ${
               topCategory?.[0] ?? "other"
             }.`,
+      fallbackUsed: true,
+    };
+  }
+}
+
+/* -------------------------------------------------------------------------
+ * AI FINANCIAL RECOMMENDATIONS
+ * ---------------------------------------------------------------------- */
+
+export type FinancialRecommendationParams = {
+  monthlyIncome: number;
+  currentBalance: number;
+  savingsTarget: number;
+  emergencyBuffer: number;
+  upcomingExpensesTotal: number;
+  safeToSpend: number;
+  dailySafeToSpend: number;
+  totalSpent: number;
+  categoryBreakdown: Record<string, number>;
+};
+
+export type FinancialRecommendationResult = {
+  recommendation: string;
+  fallbackUsed: boolean;
+};
+
+export async function generateFinancialRecommendation(
+  params: FinancialRecommendationParams
+): Promise<FinancialRecommendationResult> {
+  const {
+    monthlyIncome,
+    currentBalance,
+    savingsTarget,
+    emergencyBuffer,
+    upcomingExpensesTotal,
+    safeToSpend,
+    dailySafeToSpend,
+    totalSpent,
+    categoryBreakdown,
+  } = params;
+
+  /*
+   * Rule-based fallback.
+   * This keeps Spend Guardian useful even when Gemini
+   * is unavailable.
+   */
+
+  function generateFallbackRecommendation(): string {
+    if (safeToSpend <= 0) {
+      return "Your planned expenses, savings target, and emergency buffer leave no safe spending room right now. Consider avoiding non-essential purchases.";
+    }
+
+    if (
+      upcomingExpensesTotal >
+      safeToSpend
+    ) {
+      return "Your upcoming expenses are higher than your current safe-to-spend amount. Consider reducing discretionary spending until those obligations are covered.";
+    }
+
+    if (
+      savingsTarget > 0 &&
+      totalSpent > monthlyIncome - savingsTarget
+    ) {
+      return "Your current spending is getting close to the amount available after your savings target. Try keeping discretionary spending lower for the rest of the month.";
+    }
+
+    if (
+      dailySafeToSpend > 0 &&
+      dailySafeToSpend < 200
+    ) {
+      return `Your suggested daily spending limit is ₹${dailySafeToSpend.toFixed(
+        0
+      )}. Consider prioritizing essential expenses and keeping optional purchases small.`;
+    }
+
+    const topCategory =
+      Object.entries(categoryBreakdown).sort(
+        (a, b) => b[1] - a[1]
+      )[0];
+
+    if (topCategory) {
+      return `You currently have ₹${safeToSpend.toFixed(
+        0
+      )} available to spend safely. Keep an eye on your ${topCategory[0]} spending to stay on track with your financial goals.`;
+    }
+
+    return `You currently have ₹${safeToSpend.toFixed(
+      0
+    )} available to spend safely. Keep tracking your spending and protect your savings target.`;
+  }
+
+  try {
+    const model = getModel();
+
+    const result = await model.generateContent(
+      `You are Spend Guardian, a responsible personal finance assistant.
+
+Give the user one short, practical financial recommendation based on their current financial situation.
+
+Financial information:
+Monthly income: ₹${monthlyIncome}
+Current balance: ₹${currentBalance}
+Monthly savings target: ₹${savingsTarget}
+Emergency buffer: ₹${emergencyBuffer}
+Upcoming unpaid expenses: ₹${upcomingExpensesTotal}
+Safe-to-spend amount: ₹${safeToSpend}
+Suggested daily safe-to-spend: ₹${dailySafeToSpend}
+Total spending this month: ₹${totalSpent}
+Category spending: ${JSON.stringify(
+        categoryBreakdown
+      )}
+
+Rules:
+- Give exactly ONE recommendation.
+- Maximum 2 sentences.
+- Be practical and encouraging, never judgmental.
+- Prioritize essential expenses, savings, and emergency protection.
+- Do not recommend loans, investments, or risky financial products.
+- Mention a specific amount or category when useful.
+- Do not use markdown.
+- Do not make up information that is not provided.
+
+Return only the recommendation text.`
+    );
+
+    const text = result.response
+      .text()
+      .trim();
+
+    if (!text) {
+      throw new Error(
+        "Empty recommendation returned by model"
+      );
+    }
+
+    return {
+      recommendation: text,
+      fallbackUsed: false,
+    };
+  } catch (err) {
+    console.error(
+      "generateFinancialRecommendation fallback triggered:",
+      err
+    );
+
+    return {
+      recommendation:
+        generateFallbackRecommendation(),
       fallbackUsed: true,
     };
   }

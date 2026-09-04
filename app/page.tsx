@@ -5,6 +5,7 @@ import SpendRing from "./components/SpendRing";
 import MoneyManagement from "./components/MoneyManagement";
 import UpcomingExpenses from "./components/UpcomingExpenses";
 import SavingsProgress from "./components/SavingsProgress";
+import FinancialRecommendation from "./components/FinancialRecommendation";
 
 type Budget = {
   id: string;
@@ -190,6 +191,8 @@ async function loadTransactions() {
           ============================================ */}
 
     <UpcomingExpenses />
+
+    <FinancialRecommendation />
 
      
 

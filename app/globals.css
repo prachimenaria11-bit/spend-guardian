@@ -253,3 +253,51 @@ button {
   text-align: center;
   padding: 24px 0;
 }
+.recommendation-card {
+  margin-top: 24px;
+}
+
+.recommendation-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.recommendation-label {
+  margin: 0 0 6px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  opacity: 0.65;
+}
+
+.recommendation-header h2 {
+  margin: 0;
+}
+
+.recommendation-icon {
+  font-size: 30px;
+}
+
+.recommendation-message {
+  margin: 20px 0;
+  line-height: 1.6;
+}
+
+.recommendation-error {
+  margin: 20px 0;
+}
+
+.recommendation-refresh {
+  border: none;
+  border-radius: 8px;
+  padding: 10px 16px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.recommendation-refresh:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
