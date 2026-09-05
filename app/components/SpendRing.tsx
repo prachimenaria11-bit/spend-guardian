@@ -22,7 +22,7 @@ export default function SpendRing({
   const color = ratio > 0.4 ? "var(--gold)" : ratio > 0.15 ? "#e0a83f" : "var(--coral)";
 
   return (
-    <div className="ring-wrap">
+    <div className="ring-wrap ring-breathe ">
       <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
         <circle
           cx={size / 2}
