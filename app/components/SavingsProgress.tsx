@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import ConfettiBurst from "./ConfettiBurst";
 
 type SavingsData = {
   totalSaved: number;
@@ -33,6 +34,20 @@ export default function SavingsProgress() {
   useEffect(() => {
     loadSavings();
   }, []);
+
+  const [celebrated, setCelebrated] = useState(false);
+const [burst, setBurst] = useState(false);
+
+useEffect(() => {
+  if (data && data.progress >= 100 && !celebrated) {
+    setBurst(true);
+    setCelebrated(true);
+    setTimeout(() => setBurst(false), 100);
+  }
+  if (data && data.progress < 100) {
+    setCelebrated(false);
+  }
+}, [data, celebrated]);
 
   async function handleAddSavings(
     e: React.FormEvent
@@ -215,6 +230,8 @@ export default function SavingsProgress() {
           {message}
         </p>
       )}
+
+      <ConfettiBurst trigger={burst} />
     </div>
   );
 }
