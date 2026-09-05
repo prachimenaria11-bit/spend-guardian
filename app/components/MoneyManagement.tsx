@@ -178,12 +178,18 @@ export default function MoneyManagement() {
       </form>
 
       {message && (
-        <p
-          style={{
-            marginTop: 16,
-            color: "var(--text-dim)",
-            fontSize: 14,
-          }}
+  <p
+    key={message}
+    className="save-message"
+    style={{
+      marginTop: 16,
+      color: "var(--text-dim)",
+      fontSize: 14,
+    }}
+  >
+    {message}
+  </p>
+)}
         >
           {message}
         </p>
