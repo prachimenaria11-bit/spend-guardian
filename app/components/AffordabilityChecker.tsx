@@ -134,9 +134,10 @@ export default function AffordabilityChecker() {
       )}
 
       {result && (
-        <div
-          className={`affordability-result ${result.status || ""}`}
-        >
+  <div
+    key={result.status}
+    className={`affordability-result ${result.status || ""}`}
+  >
           <div className="affordability-result-title">
             {result.status === "safe" && "🟢 Safe"}
             {result.status === "caution" && "🟡 Caution"}
