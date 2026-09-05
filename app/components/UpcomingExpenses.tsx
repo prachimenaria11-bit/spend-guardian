@@ -194,11 +194,12 @@ export default function UpcomingExpenses() {
         <div style={{ marginTop: 24 }}>
           <h3>Planned payments</h3>
 
-          {expenses.map((expense) => (
-            <div
-              className="txn-row"
-              key={expense.id}
-            >
+          {expenses.map((expense, i) => (
+  <div
+    className="txn-row enter"
+    key={expense.id}
+    style={{ animationDelay: `${i * 0.06}s` }}
+  >
               <span>
                 <strong>{expense.title}</strong>
                 <br />
