@@ -183,18 +183,19 @@ const moodMessage =
     ? "Careful — spending is running ahead of pace."
     : "You're on track this month.";
 
-  return (
-    <div className="container">
-      <div className="eyebrow">Spend Guardian</div>
+return (
+  <div className="container">
+    <p className="subtitle">
+      Track UPI &amp; QR spending in real time — the AI watches the pace so
+      you don&apos;t have to.
+    </p>
 
+    <GuardianMascot mood={mood} message={moodMessage} />
+
+    <div className="eyebrow">Spend Guardian</div>
       <h1 className="title">Spend without worry.</h1>
 
-      <p className="subtitle">
-        Track UPI &amp; QR spending in real time — the AI watches the pace so
-        you don&apos;t have to.
-        <GuardianMascot mood={mood} message={moodMessage} />
-        
-      </p>
+    
 
       {/* ============================================
           MONEY MANAGEMENT
