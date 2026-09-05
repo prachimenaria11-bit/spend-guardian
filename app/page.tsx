@@ -7,6 +7,7 @@ import UpcomingExpenses from "./components/UpcomingExpenses";
 import SavingsProgress from "./components/SavingsProgress";
 import FinancialRecommendation from "./components/FinancialRecommendation";
 import AffordabilityChecker from "./components/AffordabilityChecker";
+import GuardianMascot from "./components/GuardianMascot";
 
 type Budget = {
   id: string;
@@ -167,7 +168,21 @@ async function loadTransactions() {
       setSummaryLoading(false);
     }
   }
+  const ratio =
+  budget && budget.total_budget > 0 && safeToSpend !== null
+    ? Math.max(0, Math.min(1, safeToSpend / budget.total_budget))
+    : 1;
 
+const hasHighAlert = alerts.some((a) => a.flag.severity === "high" || a.flag.severity === "medium");
+
+const mood: "calm" | "happy" | "worried" =
+  hasHighAlert || ratio <= 0.15 ? "worried" : "calm";
+
+const moodMessage =
+  mood === "worried"
+    ? "Careful — spending is running ahead of pace."
+    : "You're on track this month.";
+<GuardianMascot mood={mood} message={moodMessage} />
   return (
     <div className="container">
       <div className="eyebrow">Spend Guardian</div>
