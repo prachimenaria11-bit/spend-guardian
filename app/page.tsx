@@ -34,8 +34,9 @@ export default function Home() {
   const [budgetInput, setBudgetInput] = useState("");
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [safeToSpend, setSafeToSpend] = useState<number | null>(null);
-  const [dailySafeToSpend, setDailySafeToSpend] = useState<number | null>(null);
-
+  const [dailySafeToSpend, setDailySafeToSpend] = useState<number | null>(
+    null
+  );
   const [merchant, setMerchant] = useState("");
   const [amount, setAmount] = useState("");
   const [submitting, setSubmitting] = useState(false);
@@ -58,24 +59,24 @@ export default function Home() {
       setSafeToSpend(Number(data.budget.total_budget));
     }
   }
-async function loadTransactions() {
-  const res = await fetch("/api/expense");
-  const data = await res.json();
 
-  setTransactions(data.transactions ?? []);
+  async function loadTransactions() {
+    const res = await fetch("/api/expense");
+    const data = await res.json();
 
-  if (data.safeToSpend !== null && data.safeToSpend !== undefined) {
-    setSafeToSpend(data.safeToSpend);
+    setTransactions(data.transactions ?? []);
+
+    if (data.safeToSpend !== null && data.safeToSpend !== undefined) {
+      setSafeToSpend(data.safeToSpend);
+    }
+
+    if (
+      data.dailySafeToSpend !== null &&
+      data.dailySafeToSpend !== undefined
+    ) {
+      setDailySafeToSpend(data.dailySafeToSpend);
+    }
   }
-
-  if (
-    data.dailySafeToSpend !== null &&
-    data.dailySafeToSpend !== undefined
-  ) {
-    setDailySafeToSpend(data.dailySafeToSpend);
-  }
-}
- 
 
   useEffect(() => {
     loadBudget();
@@ -168,53 +169,50 @@ async function loadTransactions() {
       setSummaryLoading(false);
     }
   }
+
   const ratio =
-  budget && budget.total_budget > 0 && safeToSpend !== null
-    ? Math.max(0, Math.min(1, safeToSpend / budget.total_budget))
-    : 1;
+    budget && budget.total_budget > 0 && safeToSpend !== null
+      ? Math.max(0, Math.min(1, safeToSpend / budget.total_budget))
+      : 1;
 
-const hasHighAlert = alerts.some((a) => a.flag.severity === "high" || a.flag.severity === "medium");
+  const hasHighAlert = alerts.some(
+    (a) => a.flag.severity === "high" || a.flag.severity === "medium"
+  );
 
-const mood: "calm" | "happy" | "worried" =
-  hasHighAlert || ratio <= 0.15 ? "worried" : "calm";
+  const mood: "calm" | "happy" | "worried" =
+    hasHighAlert || ratio <= 0.15 ? "worried" : "calm";
 
-const moodMessage =
-  mood === "worried"
-    ? "Careful — spending is running ahead of pace."
-    : "You're on track this month.";
+  const moodMessage =
+    mood === "worried"
+      ? "Careful — spending is running ahead of pace."
+      : "You're on track this month.";
 
-return (
-  <div className="container">
-    <div className="eyebrow">Spend Guardian</div>
+  return (
+    <div className="container">
+      <div className="eyebrow">Spend Guardian</div>
 
-    <h1 className="title">Spend without worry.</h1>
+      <h1 className="title">Spend without worry.</h1>
 
-    <p className="subtitle">
-      Track UPI &amp; QR spending in real time — the AI watches the pace so
-      you don&apos;t have to.
-    </p>
+      <p className="subtitle">
+        Track UPI &amp; QR spending in real time — the AI watches the pace so
+        you don&apos;t have to.
+      </p>
 
-    <GuardianMascot mood={mood} message={moodMessage} />
-
-    
+      <GuardianMascot mood={mood} message={moodMessage} />
 
       {/* ============================================
           MONEY MANAGEMENT
           ============================================ */}
 
       <MoneyManagement />
-<div className="dashboard-grid">
-  <SavingsProgress />
-  <UpcomingExpenses />
-</div>
 
-<FinancialRecommendation />
-<AffordabilityChecker />
+      <div className="dashboard-grid">
+        <SavingsProgress />
+        <UpcomingExpenses />
+      </div>
 
-     
-
-
-     
+      <FinancialRecommendation />
+      <AffordabilityChecker />
 
       {/* ============================================
           EXISTING SPEND GUARDIAN FEATURES
@@ -226,9 +224,7 @@ return (
 
           <form onSubmit={handleSetBudget}>
             <div className="field">
-              <label htmlFor="budget">
-                Total monthly budget (₹)
-              </label>
+              <label htmlFor="budget">Total monthly budget (₹)</label>
 
               <input
                 id="budget"
@@ -249,34 +245,32 @@ return (
           {/* Spend Ring */}
 
           <div className="card safe-spend-card">
-  <SpendRing
-    safeToSpend={safeToSpend}
-    totalBudget={Number(budget.total_budget)}
-  />
+            <SpendRing
+              safeToSpend={safeToSpend}
+              totalBudget={Number(budget.total_budget)}
+            />
 
-  {dailySafeToSpend !== null && (
-    <div
-      style={{
-        marginTop: 20,
-        textAlign: "center",
-      }}
-    >
-      <strong>
-        ₹{dailySafeToSpend.toFixed(0)} / day
-      </strong>
+            {dailySafeToSpend !== null && (
+              <div
+                style={{
+                  marginTop: 20,
+                  textAlign: "center",
+                }}
+              >
+                <strong>₹{dailySafeToSpend.toFixed(0)} / day</strong>
 
-      <p
-        style={{
-          color: "var(--text-dim)",
-          marginTop: 6,
-          fontSize: 14,
-        }}
-      >
-        Your suggested daily spending limit
-      </p>
-    </div>
-  )}
-</div>
+                <p
+                  style={{
+                    color: "var(--text-dim)",
+                    marginTop: 6,
+                    fontSize: 14,
+                  }}
+                >
+                  Your suggested daily spending limit
+                </p>
+              </div>
+            )}
+          </div>
 
           {/* Log Payment */}
 
@@ -285,9 +279,7 @@ return (
 
             <form onSubmit={handleAddExpense}>
               <div className="field">
-                <label htmlFor="merchant">
-                  Merchant / what for
-                </label>
+                <label htmlFor="merchant">Merchant / what for</label>
 
                 <input
                   id="merchant"
@@ -299,9 +291,7 @@ return (
               </div>
 
               <div className="field">
-                <label htmlFor="amount">
-                  Amount (₹)
-                </label>
+                <label htmlFor="amount">Amount (₹)</label>
 
                 <input
                   id="amount"
@@ -313,9 +303,7 @@ return (
               </div>
 
               <button className="btn" disabled={submitting}>
-                {submitting
-                  ? "Checking with AI…"
-                  : "Add expense"}
+                {submitting ? "Checking with AI…" : "Add expense"}
               </button>
             </form>
           </div>
@@ -336,8 +324,7 @@ return (
                   </div>
 
                   <div>
-                    <strong>{a.merchant}</strong> —{" "}
-                    {a.flag.reason}
+                    <strong>{a.merchant}</strong> — {a.flag.reason}
                   </div>
                 </div>
               ))}
@@ -351,17 +338,14 @@ return (
 
             {transactions.length === 0 ? (
               <div className="empty">
-                No expenses logged yet — add one above to see it
-                here.
+                No expenses logged yet — add one above to see it here.
               </div>
             ) : (
               transactions.map((t) => (
                 <div className="txn-row" key={t.id}>
                   <span>{t.merchant}</span>
 
-                  <span className="tag">
-                    {t.category}
-                  </span>
+                  <span className="tag">{t.category}</span>
 
                   <span className="txn-amount">
                     ₹{Number(t.amount).toFixed(0)}
@@ -377,9 +361,7 @@ return (
             <h2>Month-end wrap-up</h2>
 
             {summary ? (
-              <p className="summary-text">
-                &ldquo;{summary}&rdquo;
-              </p>
+              <p className="summary-text">&ldquo;{summary}&rdquo;</p>
             ) : (
               <button
                 className="btn"
@@ -415,13 +397,12 @@ return (
                   fontSize: 13,
                 }}
               >
-                Every AI decision — categorization, budget
-                nudges, and this summary — is logged in
-                Supabase&apos;s <code>ai_logs</code> table with
-                the exact (privacy-sanitized) input it saw and
-                whether a fallback rule fired instead. Query
-                that table directly to inspect the full trail
-                for your demo.
+                Every AI decision — categorization, budget nudges,
+                and this summary — is logged in Supabase&apos;s{" "}
+                <code>ai_logs</code> table with the exact
+                (privacy-sanitized) input it saw and whether a fallback
+                rule fired instead. Query that table directly to inspect
+                the full trail for your demo.
               </p>
             </div>
           )}
