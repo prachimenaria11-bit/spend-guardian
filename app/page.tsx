@@ -182,7 +182,7 @@ const moodMessage =
   mood === "worried"
     ? "Careful — spending is running ahead of pace."
     : "You're on track this month.";
-<GuardianMascot mood={mood} message={moodMessage} />
+
   return (
     <div className="container">
       <div className="eyebrow">Spend Guardian</div>
@@ -192,6 +192,8 @@ const moodMessage =
       <p className="subtitle">
         Track UPI &amp; QR spending in real time — the AI watches the pace so
         you don&apos;t have to.
+        <GuardianMascot mood={mood} message={moodMessage} />
+        
       </p>
 
       {/* ============================================
