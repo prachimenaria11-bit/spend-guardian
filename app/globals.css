@@ -27,6 +27,13 @@
   --font-display: "Fraunces", serif;
   --font-body: "Inter", sans-serif;
   --font-mono: "JetBrains Mono", monospace;
+  --gold: #f2c14e;
+--gold-soft: rgba(242, 193, 78, 0.15);
+--coral: #e2725b;
+--coral-soft: rgba(226, 114, 91, 0.15);
+--sage: #9caf88;
+
+  
 }
 * {
   box-sizing: border-box;
